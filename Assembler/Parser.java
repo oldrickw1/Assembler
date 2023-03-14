@@ -13,7 +13,6 @@ public class Parser {
 
     public Parser(String filepath) {
         commands = new ArrayList<>();
-        System.out.println("filepath: " + filepath);
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filepath));
             while (true) {
@@ -64,11 +63,19 @@ public class Parser {
 
 
     public String getSymbol() throws Exception {
-        if (!(currentInstruction.type == InstructionType.L_INSTRUCTION)) {
+        if (currentInstruction.type != InstructionType.L_INSTRUCTION) {
             throw new Exception("Wrong instruction type");
         }
         return currentInstruction.instruction.substring(1,currentInstruction.instruction.length()-2);
     }
+
+    public String getVariable() throws Exception {
+        if (currentInstruction.type != InstructionType.A_INSTRUCTION) {
+            throw new Exception("Wrong instruction type");
+        }
+        return currentInstruction.instruction.substring(1);
+    }
+
 
 
     public Instruction getCurrentInstruction() {

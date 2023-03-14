@@ -1,7 +1,17 @@
 package Assembler;
 
+import java.util.HashMap;
+
 public class Coder {
-    public String encode(String command) {
-        return "TODO";
+    HashMap<String, Integer> map;
+
+    public Coder() {
+        map = new HashMap();
+
+    }
+
+
+    public String getBinVersionOfDest(String dest) {
+
     }
 }

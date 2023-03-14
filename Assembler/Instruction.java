@@ -9,5 +9,15 @@ public class Instruction {
         this.type = type;
         this.instruction = instruction;
     }
+
+    @Override
+    public String toString() {
+        return "Instruction{" +
+                "type=" + type +
+                ", instruction='" + instruction + '\'' +
+                '}';
+    }
+
+
 }
 
