@@ -2,6 +2,7 @@ package Assembler;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -11,6 +12,8 @@ public class Parser {
 
 
     public Parser(String filepath) {
+        commands = new ArrayList<>();
+        System.out.println("filepath: " + filepath);
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filepath));
             while (true) {
@@ -47,7 +50,11 @@ public class Parser {
 
 
     public boolean hasMoreCommands() {
-        return index < commands.size();
+        if (index < commands.size()) {
+            currentInstruction = commands.get(index);
+            return true;
+        }
+        return false;
     }
 
 
