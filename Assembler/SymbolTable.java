@@ -3,7 +3,8 @@ package Assembler;
 import java.util.HashMap;
 
 public class SymbolTable {
-    HashMap<String, Integer> map;
+    private HashMap<String, Integer> map;
+    private Integer referenceIndex;
 
     public SymbolTable() {
         map = new HashMap<>();
@@ -31,6 +32,8 @@ public class SymbolTable {
         map.put("ARG", 2);
         map.put("THIS", 3);
         map.put("THAT", 4);
+
+        referenceIndex = 16;
     }
     public boolean contains(String symbol) {
         return map.containsKey(symbol);
@@ -38,5 +41,9 @@ public class SymbolTable {
 
     public int getAddress(String symbol) {
         return map.get(symbol);
+    }
+
+    public void add(String label) {
+        map.put(label, referenceIndex++);
     }
 }

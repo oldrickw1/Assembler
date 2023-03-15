@@ -12,29 +12,20 @@ public class Parser {
     private Instruction currentInstruction;
 
 
-    public Parser(String filepath) {
+    public Parser(String filepath) throws IOException {
         commands = new ArrayList<>();
-        try {
-            parseContent(filepath);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        parseContent(filepath);
         index = -1;
     }
 
     private void parseContent(String filepath) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(filepath));
-        while (true) {
-            String line = reader.readLine();
-            if (line == null) {
-                break;
-            }
+        String line;
+        while ((line = reader.readLine()) != null) {
             line = line.strip();
-            if (!isCommand(line)) {
-                continue;
+            if (isCommand(line)) {
+                commands.add(new Instruction(getType(line), line));
             }
-            InstructionType type = getType(line);
-            commands.add(new Instruction(type, line));
         }
         reader.close();
     }
@@ -64,7 +55,7 @@ public class Parser {
         return currentInstruction.instruction.substring(1, currentInstruction.instruction.length() - 2);
     }
 
-    public String getVariable() throws Exception {
+    public String getVariableOrConstant() throws Exception {
         if (currentInstruction.type != InstructionType.A_INSTRUCTION) {
             throw new Exception("Wrong instruction type");
         }

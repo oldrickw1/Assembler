@@ -1,9 +1,10 @@
 package Assembler;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 
 public class HackAssembler {
+
+
     public static void main(String[] args) throws Exception {
 //        quitIfNoArgs(args);
 
@@ -12,34 +13,46 @@ public class HackAssembler {
         Coder coder = new Coder();
         StringBuilder stringBuilder = new StringBuilder();
 
+        // First iteration:
+        while (parser.hasMoreCommands()) {
+            parser.advance();
+            Instruction instruction = parser.getCurrentInstruction();
+            if (instruction.type == InstructionType.L_INSTRUCTION) {
+                String label = parser.getSymbol();
+                table.add(label);
+            }
+        }
+
+
         while (parser.hasMoreCommands()) {
             parser.advance();
             Instruction instruction = parser.getCurrentInstruction();
 
-            System.out.println(instruction);
-
-
             if (instruction.type == InstructionType.A_INSTRUCTION) {
-                String variable = parser.getVariable();
-                System.out.println(variable);
-                if (isSymbol(variable)) {
-                    if (table.contains(variable)) {
-                        stringBuilder.append(getPaddedBinaries(table.getAddress(variable)));
-                    }
-                } else {
-                    stringBuilder.append(getPaddedBinaries(Integer.parseInt(variable)));
-                }
+                String variable = parser.getVariableOrConstant();
+                addAInstructionCode(table, stringBuilder, variable);
             } else if (instruction.type == InstructionType.C_INSTRUCTION) {
-//                String binDestCode = coder.getBinVersionOfDest(parser.getDest());
-
+                addCInstructionCode(table, stringBuilder, instruction.instruction);
             }
-            else if (instruction.type == InstructionType.L_INSTRUCTION){
-
-            }
-
             stringBuilder.append('\n');
         }
         System.out.println(stringBuilder.toString());
+    }
+
+    private static void addCInstructionCode(SymbolTable table, StringBuilder stringBuilder, String instruction) {
+    }
+
+    private static void addAInstructionCode(SymbolTable table, StringBuilder stringBuilder, String variable) {
+        if (isSymbol(variable)) {
+            if (table.contains(variable)) {
+                stringBuilder.append(getPaddedBinaries(table.getAddress(variable)));
+            } else {
+                System.out.println("Label not caught in first iteration. This should not be happening");
+            }
+        } else {
+
+            stringBuilder.append(getPaddedBinaries(Integer.parseInt(variable)));
+        }
     }
 
     private static String getPaddedBinaries(int i) {
