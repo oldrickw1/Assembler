@@ -29,13 +29,14 @@ public class HackAssembler {
                     stringBuilder.append(getPaddedBinaries(Integer.parseInt(variable)));
                 }
             } else if (instruction.type == InstructionType.C_INSTRUCTION) {
-                String binDestCode = coder.getBinVersionOfDest(parser.getDest());
+//                String binDestCode = coder.getBinVersionOfDest(parser.getDest());
 
             }
             else if (instruction.type == InstructionType.L_INSTRUCTION){
 
             }
             parser.advance();
+            stringBuilder.append('\n');
         }
         System.out.println(stringBuilder.toString());
     }
@@ -59,7 +60,7 @@ public class HackAssembler {
     }
 
     private static boolean isSymbol(String inst) {
-        return inst.matches("[A-Za-z]+");
+        return inst.matches("[A-Za-z].*");
     }
 
     private static void quitIfNoArgs(String[] args) throws Exception {
