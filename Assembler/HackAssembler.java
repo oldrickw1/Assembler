@@ -13,6 +13,7 @@ public class HackAssembler {
         StringBuilder stringBuilder = new StringBuilder();
 
         while (parser.hasMoreCommands()) {
+            parser.advance();
             Instruction instruction = parser.getCurrentInstruction();
 
             System.out.println(instruction);
@@ -35,7 +36,7 @@ public class HackAssembler {
             else if (instruction.type == InstructionType.L_INSTRUCTION){
 
             }
-            parser.advance();
+
             stringBuilder.append('\n');
         }
         System.out.println(stringBuilder.toString());

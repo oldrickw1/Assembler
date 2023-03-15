@@ -19,7 +19,7 @@ public class Parser {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        index = 0;
+        index = -1;
     }
 
     private void parseContent(String filepath) throws IOException {
@@ -50,15 +50,11 @@ public class Parser {
     }
 
     public boolean hasMoreCommands() {
-        if (index < commands.size()) {
-            currentInstruction = commands.get(index);
-            return true;
-        }
-        return false;
+        return index < commands.size() -1;
     }
 
     public void advance() {
-        currentInstruction = commands.get(index++);
+        currentInstruction = commands.get(++index);
     }
 
     public String getSymbol() throws Exception {
