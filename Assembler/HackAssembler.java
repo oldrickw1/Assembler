@@ -3,8 +3,6 @@ package Assembler;
 import java.text.DecimalFormat;
 
 public class HackAssembler {
-
-
     public static void main(String[] args) throws Exception {
 //        quitIfNoArgs(args);
 
@@ -13,26 +11,18 @@ public class HackAssembler {
         Coder coder = new Coder();
         StringBuilder stringBuilder = new StringBuilder();
 
-        // First iteration:
-        while (parser.hasMoreCommands()) {
-            parser.advance();
-            Instruction instruction = parser.getCurrentInstruction();
-            if (isLInstruction(instruction)) {
-                String label = parser.getSymbol();
-                table.addLabel(label, parser.getLineNumber());
-            }
-        }
+        firstPass(table, parser);
         parser.reset();
 
         while (parser.hasMoreCommands()) {
             parser.advance();
             Instruction instruction = parser.getCurrentInstruction();
 
-            if (isAInstruction(instruction)) {
+            if (instruction.type == InstructionType.A_INSTRUCTION) {
                 String variableOrConstant = parser.getVariableOrConstant();
                 addAInstructionCode(table, stringBuilder, variableOrConstant);
                 stringBuilder.append('\n');
-            } else if (isCInstruction(instruction)) {
+            } else if (instruction.type == InstructionType.C_INSTRUCTION) {
                 addCInstructionCode(table, stringBuilder, instruction.instruction);
                 stringBuilder.append('\n');
             }
@@ -42,16 +32,15 @@ public class HackAssembler {
         System.out.println(table);
     }
 
-    private static boolean isCInstruction(Instruction instruction) {
-        return instruction.type == InstructionType.C_INSTRUCTION;
-    }
-
-    private static boolean isAInstruction(Instruction instruction) {
-        return instruction.type == InstructionType.A_INSTRUCTION;
-    }
-
-    private static boolean isLInstruction(Instruction instruction) {
-        return instruction.type == InstructionType.L_INSTRUCTION;
+    private static void firstPass(SymbolTable table, Parser parser) throws Exception {
+        while (parser.hasMoreCommands()) {
+            parser.advance();
+            Instruction instruction = parser.getCurrentInstruction();
+            if (instruction.type == InstructionType.L_INSTRUCTION) {
+                String label = parser.getSymbol();
+                table.addLabel(label, parser.getLineNumber());
+            }
+        }
     }
 
     private static void addCInstructionCode(SymbolTable table, StringBuilder stringBuilder, String instruction) {
@@ -76,21 +65,7 @@ public class HackAssembler {
     }
 
     private static String getPaddedBinaries(int i) {
-        String binaryString = getBinaries(i);
-        String paddedBinaries = pad(binaryString);
-        return paddedBinaries;
-    }
-
-    private static String pad(String s) {
-        DecimalFormat format = new DecimalFormat("0000000000000000");
-        String str = format.format(Integer.parseInt(s));
-        return str;
-    }
-
-    private static String getBinaries(int i) {
-        String s = Integer.toBinaryString(i);
-        return s;
-
+        return String.format("%016d", Integer.parseInt(Integer.toString(i, 2)));
     }
 
     private static boolean isSymbol(String inst) {
