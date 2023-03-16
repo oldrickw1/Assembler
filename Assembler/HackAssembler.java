@@ -1,38 +1,33 @@
 package Assembler;
 
-import java.text.DecimalFormat;
-
 public class HackAssembler {
-    public static void main(String[] args) throws Exception {
-//        quitIfNoArgs(args);
+    private SymbolTable table;
+    private Parser parser;
+    private Coder coder;
+    private StringBuilder stringBuilder;
 
-        SymbolTable table = new SymbolTable();
-        Parser parser = new Parser("test.asm");
-        Coder coder = new Coder();
-        StringBuilder stringBuilder = new StringBuilder();
+    public void assemble(String filePath) throws Exception {
+        table = new SymbolTable();
+        parser = new Parser(filePath);
+        coder = new Coder();
+        stringBuilder = new StringBuilder();
 
-        firstPass(table, parser);
+        firstPass();
         parser.reset();
-
         while (parser.hasMoreCommands()) {
             parser.advance();
             Instruction instruction = parser.getCurrentInstruction();
-
             if (instruction.type == InstructionType.A_INSTRUCTION) {
-                String variableOrConstant = parser.getVariableOrConstant();
-                addAInstructionCode(table, stringBuilder, variableOrConstant);
-                stringBuilder.append('\n');
+                addAInstructionCode(parser.getVariableOrConstant());
             } else if (instruction.type == InstructionType.C_INSTRUCTION) {
-                addCInstructionCode(table, stringBuilder, instruction.instruction);
-                stringBuilder.append('\n');
+                addCInstructionCode(instruction.instruction);
             }
         }
         String binaries = stringBuilder.substring(0, stringBuilder.length() - 1);
         System.out.println(binaries);
-        System.out.println(table);
     }
 
-    private static void firstPass(SymbolTable table, Parser parser) throws Exception {
+    private void firstPass() throws Exception {
         while (parser.hasMoreCommands()) {
             parser.advance();
             Instruction instruction = parser.getCurrentInstruction();
@@ -43,39 +38,32 @@ public class HackAssembler {
         }
     }
 
-    private static void addCInstructionCode(SymbolTable table, StringBuilder stringBuilder, String instruction) {
+    private void addCInstructionCode(String instruction) {
 
     }
 
-    private static void addAInstructionCode(SymbolTable table, StringBuilder stringBuilder, String variableOrConstant) {
+    private void addAInstructionCode(String variableOrConstant) {
         if (isSymbol(variableOrConstant)) {
             if (table.contains(variableOrConstant)) {
                 // Get the address of the variable, recursively pass it again so that it gets added in binary form;
                 int address = table.getAddress(variableOrConstant);
-                addAInstructionCode(table, stringBuilder, Integer.toString(address));
+                addAInstructionCode(Integer.toString(address));
             } else {
                 // Add the newly declared variable to the SymbolTable, recursively get it's value;
                 table.addVariable(variableOrConstant);
-                addAInstructionCode(table, stringBuilder, variableOrConstant);
+                addAInstructionCode(variableOrConstant);
             }
         // Is a constant, can be added in binary form
         } else {
-            stringBuilder.append(getPaddedBinaries(Integer.parseInt(variableOrConstant)));
+            stringBuilder.append(getPaddedBinaries(Integer.parseInt(variableOrConstant)) + '\n');
         }
     }
 
-    private static String getPaddedBinaries(int i) {
+    private String getPaddedBinaries(int i) {
         return String.format("%016d", Integer.parseInt(Integer.toString(i, 2)));
     }
 
-    private static boolean isSymbol(String inst) {
+    private boolean isSymbol(String inst) {
         return inst.matches("[A-Za-z].*");
     }
-
-    private static void quitIfNoArgs(String[] args) throws Exception {
-        if (args[0] == null) {
-            throw new Exception("No command line arguments");
-        }
-    }
-
 }
