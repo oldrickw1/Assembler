@@ -17,10 +17,13 @@ public class HackAssembler {
         while (parser.hasMoreCommands()) {
             parser.advance();
             Instruction instruction = parser.getCurrentInstruction();
-            if (instruction.type == InstructionType.A_INSTRUCTION) {
-                addAInstructionCode(parser.getVariableOrConstant());
-            } else if (instruction.type == InstructionType.C_INSTRUCTION) {
-                addCInstructionCode(instruction.instruction);
+            switch (instruction.type) {
+                case A_INSTRUCTION:
+                    addAInstructionCode(parser.getVariableOrConstant());
+                    break;
+                case C_INSTRUCTION:
+                    addCInstructionCode(parser.getDest(), parser.getComp(), parser.getJump());
+                    break;
             }
         }
         String binaries = stringBuilder.substring(0, stringBuilder.length() - 1);
@@ -32,14 +35,13 @@ public class HackAssembler {
             parser.advance();
             Instruction instruction = parser.getCurrentInstruction();
             if (instruction.type == InstructionType.L_INSTRUCTION) {
-                String label = parser.getSymbol();
-                table.addLabel(label, parser.getLineNumber());
+                table.addLabel(parser.getSymbol(), parser.getLineNumber());
             }
         }
     }
 
-    private void addCInstructionCode(String instruction) {
-
+    private void addCInstructionCode(String dest, String comp, String jump) {
+        System.out.println("Destination: " + dest +"\nComputation: " + comp + "\nJump: " + jump);
     }
 
     private void addAInstructionCode(String variableOrConstant) {

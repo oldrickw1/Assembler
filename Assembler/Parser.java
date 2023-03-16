@@ -73,4 +73,41 @@ public class Parser {
     public int getLineNumber() {
         return index;
     }
+
+    public String getDest() throws Exception {
+        checkIfCInstruction();
+        if (currentInstruction.instruction.contains("=")) {
+            String[] results = currentInstruction.instruction.split("=");
+            return results[0];
+        }
+        return null;
+    }
+
+
+
+    public String getComp() throws Exception {
+        checkIfCInstruction();
+        if (currentInstruction.instruction.contains("=")) {
+            return currentInstruction.instruction.split("=")[1];
+        } else if (currentInstruction.instruction.contains(";")) {
+            return currentInstruction.instruction.split(";")[0];
+        }
+        System.out.println("No comp??");
+        return null;
+    }
+
+    public String getJump() throws Exception {
+        checkIfCInstruction();
+        if (currentInstruction.instruction.contains(";")) {
+            return currentInstruction.instruction.split(";")[1];
+        }
+        return null;
+    }
+
+    private void checkIfCInstruction() throws Exception {
+        if (currentInstruction.type != InstructionType.C_INSTRUCTION) {
+            throw new Exception("Wrong instruction type");
+        }
+    }
+
 }

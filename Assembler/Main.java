@@ -5,7 +5,6 @@ public class Main {
 //        quitIfNoArgs(args);
         HackAssembler assembler = new HackAssembler();
         assembler.assemble("test.asm");
-
     }
 
     private static void quitIfNoArgs(String[] args) throws Exception {
