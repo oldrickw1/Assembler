@@ -52,7 +52,7 @@ public class Parser {
         if (currentInstruction.type != InstructionType.L_INSTRUCTION) {
             throw new Exception("Wrong instruction type");
         }
-        return currentInstruction.instruction.substring(1, currentInstruction.instruction.length() - 2);
+        return currentInstruction.instruction.substring(1, currentInstruction.instruction.length() - 1);
     }
 
     public String getVariableOrConstant() throws Exception {
@@ -64,5 +64,13 @@ public class Parser {
 
     public Instruction getCurrentInstruction() {
         return currentInstruction;
+    }
+
+    public void reset() {
+        index = -1;
+    }
+
+    public int getLineNumber() {
+        return index;
     }
 }

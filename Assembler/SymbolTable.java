@@ -43,7 +43,16 @@ public class SymbolTable {
         return map.get(symbol);
     }
 
-    public void add(String label) {
-        map.put(label, referenceIndex++);
+    public void addVariable(String name) {
+        map.put(name, referenceIndex++);
+    }
+
+    public void addLabel(String label, int lineNumber) {
+        map.put(label, lineNumber);
+    }
+
+    @Override
+    public String toString() {
+        return map.toString();
     }
 }

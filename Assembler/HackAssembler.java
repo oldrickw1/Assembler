@@ -17,41 +17,61 @@ public class HackAssembler {
         while (parser.hasMoreCommands()) {
             parser.advance();
             Instruction instruction = parser.getCurrentInstruction();
-            if (instruction.type == InstructionType.L_INSTRUCTION) {
+            if (isLInstruction(instruction)) {
                 String label = parser.getSymbol();
-                table.add(label);
+                table.addLabel(label, parser.getLineNumber());
             }
         }
-
+        parser.reset();
 
         while (parser.hasMoreCommands()) {
             parser.advance();
             Instruction instruction = parser.getCurrentInstruction();
 
-            if (instruction.type == InstructionType.A_INSTRUCTION) {
-                String variable = parser.getVariableOrConstant();
-                addAInstructionCode(table, stringBuilder, variable);
-            } else if (instruction.type == InstructionType.C_INSTRUCTION) {
+            if (isAInstruction(instruction)) {
+                String variableOrConstant = parser.getVariableOrConstant();
+                addAInstructionCode(table, stringBuilder, variableOrConstant);
+                stringBuilder.append('\n');
+            } else if (isCInstruction(instruction)) {
                 addCInstructionCode(table, stringBuilder, instruction.instruction);
+                stringBuilder.append('\n');
             }
-            stringBuilder.append('\n');
         }
-        System.out.println(stringBuilder.toString());
+        String binaries = stringBuilder.substring(0, stringBuilder.length() - 1);
+        System.out.println(binaries);
+        System.out.println(table);
+    }
+
+    private static boolean isCInstruction(Instruction instruction) {
+        return instruction.type == InstructionType.C_INSTRUCTION;
+    }
+
+    private static boolean isAInstruction(Instruction instruction) {
+        return instruction.type == InstructionType.A_INSTRUCTION;
+    }
+
+    private static boolean isLInstruction(Instruction instruction) {
+        return instruction.type == InstructionType.L_INSTRUCTION;
     }
 
     private static void addCInstructionCode(SymbolTable table, StringBuilder stringBuilder, String instruction) {
+
     }
 
-    private static void addAInstructionCode(SymbolTable table, StringBuilder stringBuilder, String variable) {
-        if (isSymbol(variable)) {
-            if (table.contains(variable)) {
-                stringBuilder.append(getPaddedBinaries(table.getAddress(variable)));
+    private static void addAInstructionCode(SymbolTable table, StringBuilder stringBuilder, String variableOrConstant) {
+        if (isSymbol(variableOrConstant)) {
+            if (table.contains(variableOrConstant)) {
+                // Get the address of the variable, recursively pass it again so that it gets added in binary form;
+                int address = table.getAddress(variableOrConstant);
+                addAInstructionCode(table, stringBuilder, Integer.toString(address));
             } else {
-                System.out.println("Label not caught in first iteration. This should not be happening");
+                // Add the newly declared variable to the SymbolTable, recursively get it's value;
+                table.addVariable(variableOrConstant);
+                addAInstructionCode(table, stringBuilder, variableOrConstant);
             }
+        // Is a constant, can be added in binary form
         } else {
-
-            stringBuilder.append(getPaddedBinaries(Integer.parseInt(variable)));
+            stringBuilder.append(getPaddedBinaries(Integer.parseInt(variableOrConstant)));
         }
     }
 
