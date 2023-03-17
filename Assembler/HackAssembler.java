@@ -6,7 +6,7 @@ public class HackAssembler {
     private Coder coder;
     private StringBuilder stringBuilder;
 
-    public void assemble(String filePath) throws Exception {
+    public String assemble(String filePath) throws Exception {
         table = new SymbolTable();
         parser = new Parser(filePath);
         coder = new Coder();
@@ -24,6 +24,7 @@ public class HackAssembler {
         }
         String binaries = stringBuilder.substring(0, stringBuilder.length() - 1);
         System.out.println(binaries);
+        return binaries;
     }
 
     private void firstPass() throws Exception {
@@ -37,8 +38,8 @@ public class HackAssembler {
     }
 
     private void addCInstructionCode(String dest, String comp, String jump) {
-        System.out.printf("Destination: %20s\nComputation: %20s\nJump: %20s\n", dest, comp, jump);
-        stringBuilder.append(coder.getDest(dest)).append(coder.getComp(comp)).append(coder.getJump(jump));
+//        System.out.printf("Destination: %20s\nComputation: %20s\nJump: %20s\n", dest, comp, jump);
+        stringBuilder.append("111").append(coder.getDest(dest)).append(coder.getComp(comp)).append(coder.getJump(jump)).append('\n');
     }
 
     private void addAInstructionCode(String variableOrConstant) {
