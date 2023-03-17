@@ -92,7 +92,7 @@ public class Parser {
         } else if (currentInstruction.instruction.contains(";")) {
             return currentInstruction.instruction.split(";")[0];
         }
-        System.out.println("No comp??");
+        System.out.println("No comp??: comp = " + currentInstruction.instruction);
         return null;
     }
 

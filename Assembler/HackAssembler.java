@@ -22,9 +22,7 @@ public class HackAssembler {
                 case C_INSTRUCTION -> addCInstructionCode(parser.getDest(), parser.getComp(), parser.getJump());
             }
         }
-        String binaries = stringBuilder.substring(0, stringBuilder.length() - 1);
-        System.out.println(binaries);
-        return binaries;
+        return stringBuilder.substring(0, stringBuilder.length() - 1);
     }
 
     private void firstPass() throws Exception {
@@ -39,7 +37,7 @@ public class HackAssembler {
 
     private void addCInstructionCode(String dest, String comp, String jump) {
 //        System.out.printf("Destination: %20s\nComputation: %20s\nJump: %20s\n", dest, comp, jump);
-        stringBuilder.append("111").append(coder.getDest(dest)).append(coder.getComp(comp)).append(coder.getJump(jump)).append('\n');
+        stringBuilder.append("111").append(coder.getComp(comp)).append(coder.getDest(dest)).append(coder.getJump(jump)).append('\n');
     }
 
     private void addAInstructionCode(String variableOrConstant) {

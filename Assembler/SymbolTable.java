@@ -48,7 +48,7 @@ public class SymbolTable {
     }
 
     public void addLabel(String label, int lineNumber) {
-        map.put(label, lineNumber);
+        map.put(label, lineNumber + 1);
     }
 
     @Override
