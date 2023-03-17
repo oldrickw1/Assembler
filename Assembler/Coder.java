@@ -7,11 +7,16 @@ public class Coder {
 
     public Coder() {
         map = new HashMap();
-
+        map.put("")
     }
 
+    public String getDest(String dest) {
+    }
 
-//    public String getBinVersionOfDest(String dest) {
-//
-//    }
+    public String getComp(String comp) {
+    }
+
+    public String getJump(String jump) {
+
+    }
 }

@@ -18,12 +18,8 @@ public class HackAssembler {
             parser.advance();
             Instruction instruction = parser.getCurrentInstruction();
             switch (instruction.type) {
-                case A_INSTRUCTION:
-                    addAInstructionCode(parser.getVariableOrConstant());
-                    break;
-                case C_INSTRUCTION:
-                    addCInstructionCode(parser.getDest(), parser.getComp(), parser.getJump());
-                    break;
+                case A_INSTRUCTION -> addAInstructionCode(parser.getVariableOrConstant());
+                case C_INSTRUCTION -> addCInstructionCode(parser.getDest(), parser.getComp(), parser.getJump());
             }
         }
         String binaries = stringBuilder.substring(0, stringBuilder.length() - 1);
@@ -41,7 +37,8 @@ public class HackAssembler {
     }
 
     private void addCInstructionCode(String dest, String comp, String jump) {
-        System.out.println("Destination: " + dest +"\nComputation: " + comp + "\nJump: " + jump);
+        System.out.printf("Destination: %20s\nComputation: %20s\nJump: %20s\n", dest, comp, jump);
+        stringBuilder.append(coder.getDest(dest)).append(coder.getComp(comp)).append(coder.getJump(jump));
     }
 
     private void addAInstructionCode(String variableOrConstant) {
@@ -57,7 +54,7 @@ public class HackAssembler {
             }
         // Is a constant, can be added in binary form
         } else {
-            stringBuilder.append(getPaddedBinaries(Integer.parseInt(variableOrConstant)) + '\n');
+            stringBuilder.append(getPaddedBinaries(Integer.parseInt(variableOrConstant))).append('\n');
         }
     }
 
