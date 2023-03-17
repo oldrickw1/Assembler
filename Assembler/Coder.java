@@ -12,15 +12,19 @@ public class Coder {
         compMap = new HashMap<>();
         jumpMap = new HashMap<>();
 
+        // Destinations
         destMap.put(null, "000");
         destMap.put("M", "001");
         destMap.put("D", "010");
         destMap.put("DM", "011");
+        // In the test code, there is also at least one occurrence of "MD". Not sure if all combinations should be entered..
+        destMap.put("MD", "011");
         destMap.put("A", "100");
         destMap.put("AM", "101");
         destMap.put("AD", "110");
         destMap.put("ADM", "111");
 
+        // Computations
         compMap.put("0", "0101010");
         compMap.put("1", "0111111");
         compMap.put("-1", "0111010");
@@ -50,6 +54,7 @@ public class Coder {
         compMap.put("D|A", "0010101");
         compMap.put("D|M", "1010101");
 
+        // Jumps
         jumpMap.put(null, "000");
         jumpMap.put("JGT", "001");
         jumpMap.put("JEQ", "010");
@@ -61,14 +66,26 @@ public class Coder {
     }
 
     public String getDest(String dest) {
-        return destMap.get(dest);
+        String value = destMap.get(dest);
+        if (value == null) {
+            System.out.println("Missing dest: " + dest);
+        }
+        return value;
     }
 
     public String getComp(String comp) {
-        return compMap.get(comp);
+        String value = compMap.get(comp);
+        if (value == null) {
+            System.out.println("Missing comp: " + comp);
+        }
+        return value;
     }
 
     public String getJump(String jump) {
-        return jumpMap.get(jump);
+        String value = jumpMap.get(jump);
+        if (value == null) {
+            System.out.println("Missing jump: " + jump);
+        }
+        return value;
     }
 }

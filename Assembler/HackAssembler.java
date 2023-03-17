@@ -1,6 +1,8 @@
 package Assembler;
 
 public class HackAssembler {
+    public static final String ZEROES_FOR_PADDING = "0000000000000000";
+
     private SymbolTable table;
     private Parser parser;
     private Coder coder;
@@ -58,7 +60,11 @@ public class HackAssembler {
     }
 
     private String getPaddedBinaries(int i) {
-        return String.format("%016d", Integer.parseInt(Integer.toString(i, 2)));
+        String binString = Integer.toString(i,2);
+        String paddedBin = ZEROES_FOR_PADDING.substring(binString.length()) + binString;
+
+        return paddedBin;
+
     }
 
     private boolean isSymbol(String inst) {

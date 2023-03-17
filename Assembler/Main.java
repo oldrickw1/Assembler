@@ -5,13 +5,12 @@ import java.io.FileWriter;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        String inputFileName = args.length == 1 ? args[0] : "default.asm";
+        String inputFileName = args.length == 1 ? args[0] : "06\\pong\\PongL.asm";
         String outputFileName = getOutputFileName(inputFileName);
-        System.out.println(inputFileName);
-        System.out.println(outputFileName);
         HackAssembler assembler = new HackAssembler();
         String machineCodeInBinaries = assembler.assemble(inputFileName);
-//        System.out.println(machineCodeInBinaries);
+
+        System.out.println(machineCodeInBinaries);
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName));
         writer.write(machineCodeInBinaries);
